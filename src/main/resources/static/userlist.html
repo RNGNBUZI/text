@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="layui/css/layui.css" />
+    <script type="application/javascript" src="layui/layui.js"></script>
+    <script type="application/javascript" src="js/jquery-3.4.1.js"></script>
+    <style type="text/css">
+        .caller-seach{
+            position: relative;
+            padding-bottom: 40px;
+        }
+        .layadmin-caller .caller-seach .caller-icon{
+            font-size: 18px;
+            position: absolute;
+            top: 9px;
+        }
+        .layadmin-caller .caller-seach-icon {
+            left: 6px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div style="float: left;">
+    <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+            <a><font color="lightblue">数据监测系统</font></a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;"><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+            <dl class="layui-nav-child">
+                <dd><a href="javascript:;">修改信息</a></dd>
+                <dd><a href="longin.html">注销</a></dd>
+            </dl>
+        </li>。
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">用户管理</a>
+            <dl class="layui-nav-child">
+                <dd><a href="userlist.html;">用户列表</a></dd>
+                <dd><a href="useradd.html">用户新增</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;"></a>
+            <dl class="layui-nav-child">
+                <dd><a href=""></a></dd>
+                <dd><a href=""></a></dd>
+                <dd><a href=""></a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"><a href=""></a></li>
+        <li class="layui-nav-item"><a href=""></a></li>
+    </ul>
+</div>
+<div th:replace="fragments/head :: header"></div>
+
+<div class="layui-body" style="margin:20px 0px 0px 20px">
+    <form id="articleSearch" class="layui-form layui-form-pane"  action="" style="margin-top: 20px;">
+        <div class="layui-row">
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input id="smsg" name="msg" placeholder="请输入名字或者手机号"  class="layui-input" type="text"/>
+                </div>
+                <button type="button"  class="layui-btn" onclick="searchMsg()" >查询</button>
+                <button  type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
+    <!--<hr class="layui-bg-blue"/>-->
+    <hr class="layui-bg-black"/>
+    <!-- 数据展示区-->
+    <table id="articleLists" lay-filter="articleTable"></table>
+    <div style="display:none;" id="currentUser"></div>
+
+    <script type="text/html" id="optBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<script>
+    var tableIns;
+    layui.use('table', function() {
+            var table = layui.table
+                , form = layui.form;
+            //表格数据展示
+        tableIns = table.render({
+                elem: '#articleLists'//指定table
+                , url: 'pagelike.do'
+                , cellMinWidth: 80//表格列宽
+                , page: true//分页开启
+                /* ,request: {
+                    pageName: 'page' //页码的参数名称，默认：page
+                    ,limitName: 'limit' //每页数据量的参数名，默认：limit
+                },response:{
+                    statusName: 'code' //数据状态的字段名称，默认：code
+                    ,countName: 'count' //数据总数的字段名称，默认：count
+                    ,dataName: 'data' //数据列表的字段名称，默认：data
+                }*/
+                , cols: [[
+                    {field: 'id', title: '序号', unresize: true, sort: true}
+                    , {field: 'name', title: '姓名'}
+                    , {field: 'phone', title: '手机号'}
+                    , {field: 'rname', title: '角色'}
+                    , {field: 'createtime', title: '创建时间', sort: true}
+                    , {fixed: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
+                ]]
+            });
+        });
+
+            /* table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                console.log(data);
+                if(layEvent === 'detail'){ //查看
+                    //do somehing
+                    layer.msg(data);
+                } else if(layEvent === 'del'){ //删除
+                    layer.confirm('真的删除行么', function(index){
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        //Ajax请求接口
+                        layer.close(index);
+                        //向服务端发送删除指令
+                    });
+                } else if(layEvent === 'edit'){ //编辑
+                    //do something
+                    //同步更新缓存对应的值
+                    obj.update({
+                        nam: '修改'
+                        ,title: '修改了吗'
+                    });
+                }
+            });
+        });*/
+
+    //搜索框
+    function searchMsg() {
+        tableIns.reload({
+            url: 'pagelike.do'
+            , where: {msg:$("#smsg").val()}
+            ,page: {
+                curr: 1 //重新从第 1 页开始
+            }//设定异步数据接口的额外参数
+        });
+    }
+</script>
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+</body>
+</html>

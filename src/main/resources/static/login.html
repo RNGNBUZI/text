@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>威仕展登录</title>
+    <script src="js/jquery-3.4.1.js" charset="utf-8"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+            font-family: montserrat;
+        }
+
+        body {
+            min-height: 100vh;
+            background-image: linear-gradient(120deg, #9999cc, #b766ad);
+        }
+
+        .login-form {
+            width: 360px;
+            background: #f1f1f1;
+            height: 300px;
+            padding: 80px 40px;
+            border-radius: 10px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .login-form h1 {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .txtb {
+            border-bottom: 2px solid #adadad;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .txtb input {
+            font-size: 15px;
+            color: #333;
+            border: none;
+            width: 100%;
+            outline: none;
+            background: none;
+            padding: 0 5px;
+            height: 40px;
+        }
+
+        .txtb span::before {
+            content: attr(data-placeholder);
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            color: #adadad;
+            transform: translateY(-50%);
+            z-index: -1;
+            transition: .5s;
+        }
+
+        .txtb span::after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 0%;
+            background: linear-gradient(120deg, #3498db, #8466db);
+            transition: .5s;
+        }
+
+        .focus+span::before {
+            top: -5px;
+        }
+
+        .focus+span::after {
+            width: 100%;
+        }
+
+        .logbtn {
+            display: block;
+            width: 100%;
+            height: 50px;
+            border: none;
+            background: linear-gradient(120deg, #3498db, #8e44ad, #3498db);
+            background-size: 200%;
+            color: #fff;
+            outline: none;
+            cursor: pointer;
+            transition: .5s;
+        }
+
+        .logbtn:hover {
+            background-position: right;
+        }
+
+        .bottom-text {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .a1 {
+            color: #ffA042;
+        }
+        .a2 {
+            float: right;
+            margin-top: 550px;
+            color: #E1E100;
+        }
+
+    </style>
+</head>
+
+<body>
+<form action="" class="login-form" id="fm1">
+    <h1>威仕展冶金科技</h1>
+    <div class="txtb">
+        <input type="text" name="name">
+        <span data-placeholder="Username"></span>
+    </div>
+
+    <div class="txtb" >
+        <input type="password" name="password" id="c1">
+        <span data-placeholder="Password" ></span>
+
+
+
+    </div>
+
+    <input type="button" onclick="login()"  class="logbtn" value="登录">
+
+</form>
+<div class="a1">
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;有智慧，更精彩</h1>
+</div>
+<div class="a2">
+    <h1>威仕展冶金科技，做智慧工业的引领者!</h1>
+</div>
+<script type="application/javascript">
+    function login() {
+        $.ajax({
+            url:"login.do",
+            method:"post",
+            data:$("#fm1").serialize(),
+            success:function (obj) {
+                if(obj.code == 0){
+                    location.href="index.html";
+                }else{
+                    alert(obj.msg);
+                }
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <script type="text/javascript" src="layui/layui.js"></script>
+    <script type="application/javascript" src="js/jquery-3.4.1.js"></script>
+    <style>
+        .a3 {
+            margin-left: 50%;
+            color: #00BBEE;
+        }
+    </style>
+</head>
+<body>
+<div style="float: left;">
+    <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+            <a><font color="lightblue">数据监测系统</font></a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;"><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+            <dl class="layui-nav-child">
+                <dd><a href="javascript:;">修改信息</a></dd>
+                <dd><a href="longin.html">注销</a></dd>
+            </dl>
+        </li>。
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">用户管理</a>
+            <dl class="layui-nav-child">
+                <dd><a href="userlist.html;">用户列表</a></dd>
+                <dd><a href="useradd.html;">用户新增</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;"></a>
+            <dl class="layui-nav-child">
+                <dd><a href=""></a></dd>
+                <dd><a href=""></a></dd>
+                <dd><a href=""></a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"><a href=""></a></li>
+        <li class="layui-nav-item"><a href=""></a></li>
+    </ul>
+</div>
+<div style="float: left;">
+    <h1 class="a3">添加用户</h1>
+    <form class="layui-form" role="form" id="fm1" action="/add.do" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" lay-verify="required|name" lay-reqtext="用户名是必填项，岂能为空？" placeholder="请输入中文" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" lay-verify="required|pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">联系方式</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-block">
+                    <select name="role" id="selectcid" lay-filter="test">
+                        <option value="" >请选择添加用户的角色</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" onclick="tj()" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+
+
+</script>
+<script>
+    layui.use('form',function () {
+        var form = layui.form;
+        //加载机构类型
+        $.ajax({
+            url: 'roleall.do',
+            dataType: 'json',
+            data:{'state': 0},	//查询状态为正常的所有机构类型
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#selectcid').append(new Option(item.rname, item.id));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        });
+
+        });
+</script>
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+        //自定义验证规则
+        form.verify({
+            name: function(value){
+                if(value.length < 2){
+                    return '至少得2个字符啊';
+                }
+
+            }
+
+            ,pass: [
+                /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)[0-9A-Za-z]{6,10}$/
+                ,'数字和大小写字母中至少两种字符的5-10位字符'
+            ]
+            ,phone:[
+
+                /^1[3|4|5|8][0-9]\d{8}$/
+                ,'输入正确手机号'
+            ]
+        });
+
+    });
+</script>
+</body>
+</html>
