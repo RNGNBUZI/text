@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8">
+    <script src="js/jquery-3.4.1.js"></script>
     <title>威仕展登录</title>
-    <script src="js/jquery-3.4.1.js" charset="utf-8"></script>
     <style>
         * {
             margin: 0;
@@ -118,16 +118,11 @@
 <form action="" class="login-form" id="fm1">
     <h1>威仕展冶金科技</h1>
     <div class="txtb">
-        <input type="text" name="name">
-        <span data-placeholder="Username"></span>
+        <input type="text" placeholder="username" name="name">
     </div>
 
     <div class="txtb" >
-        <input type="password" name="password" id="c1">
-        <span data-placeholder="Password" ></span>
-
-
-
+        <input type="password"  placeholder ="password" name="password" id="c1">
     </div>
 
     <input type="button" onclick="login()"  class="logbtn" value="登录">
@@ -139,7 +134,8 @@
 <div class="a2">
     <h1>威仕展冶金科技，做智慧工业的引领者!</h1>
 </div>
-<script type="application/javascript">
+
+<script type="text/javascript">
     function login() {
         $.ajax({
             url:"login.do",

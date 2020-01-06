@@ -6,9 +6,11 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="rname" jdbcType="VARCHAR" property="rname" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
-    <result column="flag" jdbcType="SMALLINT" property="flag" />
+    <result column="createtime" jdbcType="DATE" property="createtime" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, password, phone, createtime, flag
@@ -21,58 +23,87 @@
     delete from t_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.wsz.text.entity.Tuser" useGeneratedKeys = "true" keyProperty = "rid">
-    insert into t_user (id, name, password, 
+  <insert id="insert" parameterType="com.wsz.text.entity.Tuser" useGeneratedKeys = "true" keyProperty = "id">
+    insert into t_user (id, name, password,
       phone, createtime, flag
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{flag,jdbcType=SMALLINT}
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, now(), '可用'
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.wsz.text.entity.Tuser">
-    insert into t_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="name != null">
-        name,
-      </if>
-      <if test="password != null">
-        password,
-      </if>
-      <if test="phone != null">
-        phone,
-      </if>
-      <if test="createtime != null">
-        createtime,
-      </if>
-      <if test="flag != null">
-        flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null">
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="flag != null">
-        #{flag,jdbcType=SMALLINT},
-      </if>
-    </trim>
+
+  <select id="selectByName"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where name = #{name}
+  </select>
+
+  <select id="selectName"  resultMap="BaseResultMap">
+    select
+    t.name, t.phone
+    from t_user t
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+  <select id="queryByPage" resultMap="BaseResultMap">
+     select u.id, u.`name`,u.flag, u.createtime, u.phone, r.`rname` from t_user u join t_user_role ur on u.id = ur.uid join t_role r on r.id = ur.rid
+    order  by u.id asc limit #{index},#{count}
+  </select>
+  <select id="querByPage1" resultMap="BaseResultMap">
+  select u.id, u.name,u.flag, u.createtime, u.phone, r.`rname` from t_user u join t_user_role ur on u.id = ur.uid
+  join t_role r on r.id = ur.rid
+  where u.name like #{msg} or u.phone like #{msg} order by u.id asc limit #{index},#{count}
+  </select>
+  <select id="queryCount" resultType="java.lang.Long">
+    select count(*) from t_user
+  </select>
+
+  <select id="queryLike" resultMap="BaseResultMap">
+  select u.id, u.name, u.flag,u.createtime, u.phone, r.`rname` from t_user u join t_user_role ur on u.id = ur.uid
+  join t_role r on r.id = ur.rid
+ where u.name like #{msg} or title like #{msg} order by u.id desc
+</select>
+
+  <update id="updateByIdFlag" parameterType="com.wsz.text.entity.Tuser">
+    update t_user set flag = #{flag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByPhone"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where phone = #{phone}
+  </select>
+
+  <select id="selectByUidPerms"  resultType="java.lang.String">
+    select p.perms from t_user_role ur
+  inner join t_role_permission rp on ur.rid=rp.rid
+  inner join t_permission p on rp.pid=p.id
+  where ur.uid=#{uid}
+  </select>
+  <select id="selectByUidMenu"  resultType="com.wsz.text.entity.Tpermission">
+    select p.* from t_user_role ur
+    LEFT join t_role_permission rp on ur.rid=rp.rid
+    left join t_permission p on rp.pid=p.id
+    where p.type=1 and ur.uid=#{uid} order by p.level,p.id ;
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select u.id, u.`name`, u.createtime, r.`rname` from t_user u join t_user_role ur on u.id = ur.uid join t_role r on r.id = ur.rid where u.id
+  </select>
+  <select id="selectByUidRole" resultType="com.wsz.text.common.vo.UserRoleVo">
+   select ur.uid,r.name from t_user_role ur left join t_role r on ur.rid=r.id order by ur.uid
+  </select>
+  <select id="selectByUr" resultType="java.lang.Integer">
+   select r.id from t_user_role ur inner join t_role r on ur.rid=r.id where ur.uid=#{id} order by ur.uid
+  </select>
+  <insert id="insertMultInfo" parameterType="list">
+    insert into t_user values
+    <foreach collection="list" item="item" separator=",">
+      (null ,#{item.name},#{item.password},#{item.phone},now(),'可用')
+    </foreach>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wsz.text.entity.Tuser">
+  <update id="update" parameterType="com.wsz.text.entity.Tuser">
     update t_user
     <set>
       <if test="name != null">
@@ -93,39 +124,4 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.wsz.text.entity.Tuser">
-    update t_user
-    set name = #{name,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      createtime = #{createtime,jdbcType=TIMESTAMP},
-      flag = #{flag,jdbcType=SMALLINT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
-  <select id="selectByName"  resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_user
-    where name = #{name}
-  </select>
-  <select id="queryByPage" resultMap="BaseResultMap">
-     select u.id, u.`name`, u.createtime, u.phone, r.`rname` from t_user u join t_user_role ur on u.id = ur.uid join t_role r on r.id = ur.rid
-    order  by u.id asc limit #{index},#{count}
-  </select>
-  <select id="querByPage1" resultMap="BaseResultMap">
-  select u.id, u.name, u.createtime, u.phone, r.`rname` from t_user u join t_user_role ur on u.id = ur.uid
-  join t_role r on r.id = ur.rid
-  where u.name like #{msg} or u.phone like #{msg} order by u.id asc limit #{index},#{count}
-  </select>
-  <select id="queryCount" resultType="java.lang.Long">
-    select count(*) from t_user
-  </select>
-
-  <select id="queryLike" resultMap="BaseResultMap">
-  select u.id, u.name, u.createtime, u.phone, r.`rname` from t_user u join t_user_role ur on u.id = ur.uid
-  join t_role r on r.id = ur.rid
- where u.name like #{msg} or title like #{msg} order by u.id desc
-</select>
-
 </mapper>

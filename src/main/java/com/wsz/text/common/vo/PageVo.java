@@ -12,6 +12,7 @@ public class PageVo<T> {
     private int size;
     private int totalpage;
     private int code;
+    private List<T> data;
 
     public int getCode() {
         return code;
@@ -61,5 +62,4 @@ public class PageVo<T> {
         this.data = data;
     }
 
-    private List<T> data;
 }

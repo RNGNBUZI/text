@@ -7,58 +7,14 @@
     <script type="application/javascript" src="layui/layui.js"></script>
     <script type="application/javascript" src="js/jquery-3.4.1.js"></script>
     <style type="text/css">
-        .caller-seach{
-            position: relative;
-            padding-bottom: 40px;
-        }
-        .layadmin-caller .caller-seach .caller-icon{
-            font-size: 18px;
-            position: absolute;
-            top: 9px;
-        }
-        .layadmin-caller .caller-seach-icon {
-            left: 6px;
-        }
 
+         .a3 {
+             color: #00BBEE;
+         }
     </style>
 </head>
 <body>
-
-<div style="float: left;">
-    <ul class="layui-nav layui-nav-tree" lay-filter="test">
-        <li class="layui-nav-item layui-nav-itemed">
-            <a><font color="lightblue">数据监测系统</font></a>
-        </li>
-        <li class="layui-nav-item layui-nav-itemed">
-            <a href="javascript:;"><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
-            <dl class="layui-nav-child">
-                <dd><a href="javascript:;">修改信息</a></dd>
-                <dd><a href="longin.html">注销</a></dd>
-            </dl>
-        </li>。
-        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
-        <li class="layui-nav-item layui-nav-itemed">
-            <a href="javascript:;">用户管理</a>
-            <dl class="layui-nav-child">
-                <dd><a href="userlist.html;">用户列表</a></dd>
-                <dd><a href="useradd.html">用户新增</a></dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;"></a>
-            <dl class="layui-nav-child">
-                <dd><a href=""></a></dd>
-                <dd><a href=""></a></dd>
-                <dd><a href=""></a></dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item"><a href=""></a></li>
-        <li class="layui-nav-item"><a href=""></a></li>
-    </ul>
-</div>
-<div th:replace="fragments/head :: header"></div>
-
-<div class="layui-body" style="margin:20px 0px 0px 20px">
+<div class="layui-body" style="left: 30px;">
     <form id="articleSearch" class="layui-form layui-form-pane"  action="" style="margin-top: 20px;">
         <div class="layui-row">
             <div class="layui-inline">
@@ -70,32 +26,52 @@
                 <button  type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
-
     </form>
-    <!--<hr class="layui-bg-blue"/>-->
-    <hr class="layui-bg-black"/>
-    <!-- 数据展示区-->
-    <table id="articleLists" lay-filter="articleTable"></table>
-    <div style="display:none;" id="currentUser"></div>
 
-    <script type="text/html" id="optBar">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>
+    <hr class="layui-bg-blue"/>
+    <!-- 数据展示区-->
+    <table id="articleLists"  lay-filter="articleTable"></table>
 </div>
-<div th:replace="fragments/footer :: footer"></div>
+    <div class="editDiv" style="display:none;">
+        <h1 class="a3">编辑用户角色</h1>
+    <form class="layui-form" role="form" id="fm1" action="/add.do" method="post" >
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-block">
+                <select name="rid" id="selectcid" lay-filter="test">
+                    <option value="" >请选择添加用户的角色</option>
+                </select>
+            </div>
+        </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button"  class="layui-btn" lay-submit lay-filter="formDemo" >编辑</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+    </form>
+    </div>
+
+<script type="text/html" id="toolbarDemo"></script>
+
+<script type="text/html" id="optBar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit" >编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
 <script>
     var tableIns;
     layui.use('table', function() {
-            var table = layui.table
-                , form = layui.form;
-            //表格数据展示
+        var table = layui.table
+            , form = layui.form;
+        //表格数据展示
         tableIns = table.render({
-                elem: '#articleLists'//指定table
-                , url: 'pagelike.do'
-                , cellMinWidth: 80//表格列宽
-                , page: true//分页开启
-                /* ,request: {
+            elem: '#articleLists'//指定table
+            , url: 'pagelike.do'
+            , cellMinWidth: 80//表格列宽
+            ,toolbar:'#toolbarDemo'
+            , page: true//分页开启
+            /* ,request: {
                     pageName: 'page' //页码的参数名称，默认：page
                     ,limitName: 'limit' //每页数据量的参数名，默认：limit
                 },response:{
@@ -103,43 +79,90 @@
                     ,countName: 'count' //数据总数的字段名称，默认：count
                     ,dataName: 'data' //数据列表的字段名称，默认：data
                 }*/
-                , cols: [[
-                    {field: 'id', title: '序号', unresize: true, sort: true}
-                    , {field: 'name', title: '姓名'}
-                    , {field: 'phone', title: '手机号'}
-                    , {field: 'rname', title: '角色'}
-                    , {field: 'createtime', title: '创建时间', sort: true}
-                    , {fixed: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
-                ]]
-            });
+            , cols: [[
+                {field: 'id', title: '序号', unresize: true, sort: true}
+                , {field: 'name', title: '姓名'}
+                , {field: 'phone',  title: '手机号'}
+                , {field: 'rname', title: '角色'}
+                , {field: 'flag', title: '状态'}
+                , {field: 'createtime', title: '创建时间', sort: true}
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#optBar'}
+            ]]
         });
 
-            /* table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-                var data = obj.data; //获得当前行数据
-                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-                var tr = obj.tr; //获得当前行 tr 的DOM对象
-                console.log(data);
-                if(layEvent === 'detail'){ //查看
-                    //do somehing
-                    layer.msg(data);
-                } else if(layEvent === 'del'){ //删除
-                    layer.confirm('真的删除行么', function(index){
-                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-                        //Ajax请求接口
-                        layer.close(index);
-                        //向服务端发送删除指令
+        //监听行工具事件
+        table.on('tool(articleTable)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除么', function (index) {
+                    //obj.del();
+                    $.ajax({
+                        url: 'userdel.do',
+                        type: 'post',
+                        data: {'id': data.id},
+                        dataType: "json",
+                        success: function (data) {
+                            if (data == null) {
+                                layer.msg("删除失败", {icon: 5});
+                            } else {
+                                //删除这行
+                               obj.del();
+                                //关闭弹窗
+                                layer.close(index);
+                                layer.msg("删除成功", {icon: 6, time: 1000});
+                                layer.closeAll();
+                               // parent.location.reload();
+                                //Load();//删除完需要加数据
+                            }
+                        },
+                        error: function () {
+                            alert(data);
+                        }
                     });
-                } else if(layEvent === 'edit'){ //编辑
-                    //do something
-                    //同步更新缓存对应的值
-                    obj.update({
-                        nam: '修改'
-                        ,title: '修改了吗'
-                    });
-                }
-            });
-        });*/
+                });
+            } else if (obj.event == 'edit') {
+                layer.open({
+                    title:'编辑信息',
+                    type: 1,
+                    move:false,
+                    content:$('.editDiv'),
+                    area:['40%','50%']
+                });
+                setFormValue(obj,data);
+            }
+        });
 
+        function setFormValue(obj,data) {
+            form.on('submit(formDemo)',function (massage) {
+                $.ajax({
+                    url:'userudpaterole.do',
+                    type:'post',
+                    data:{id:data.id,rids:massage.field.rid},
+                    success:function (msg) {
+                        console.log("msg",msg);
+                        var returnCode = msg.code;
+                        if (returnCode == 0) {
+                            layer.closeAll('loading');
+                            layer.load(2);
+                            layer.msg("修改成功",{icon: 6});
+                            searchMsg();
+                            setTimeout(function () {
+                                obj.update({
+                                    rids:massage.field.rid
+                                });//修改成功修改表格数据不进行跳转
+                                layer.closeAll();//关闭所有的弹出层
+                            },1000)
+
+                        } else {
+                            layer.msg("修改失败",{icon:5});
+                        }
+                    }
+                })
+            })
+        }
+
+    });
     //搜索框
     function searchMsg() {
         tableIns.reload({
@@ -163,4 +186,21 @@
     });
 </script>
 </body>
+<script type="application/javascript">
+    layui.use('form',function () {
+        var form = layui.form;
+        //加载机构类型
+        $.ajax({
+            url: 'roleall.do',
+            dataType: 'json',
+            data:{'state': 0},	//查询状态为正常的所有机构类型
+            success: function (data) {
+                $.each(data.data, function (index, item) {
+                    $('#selectcid').append(new Option(item.rname, item.id));// 下拉菜单里添加元素
+                });
+                layui.form.render("select");
+            }
+        });
+    });
+</script>
 </html>

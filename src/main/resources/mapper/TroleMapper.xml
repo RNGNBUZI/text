@@ -9,13 +9,13 @@
   <sql id="Base_Column_List">
     id, rname, info
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
     <include refid="Base_Column_List" />
     from t_role
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteById" parameterType="java.lang.Integer">
     delete from t_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -25,32 +25,7 @@
     values (#{id,jdbcType=INTEGER}, #{rname,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.wsz.text.entity.Trole">
-    insert into t_role
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="rname != null">
-        rname,
-      </if>
-      <if test="info != null">
-        info,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="rname != null">
-        #{rname,jdbcType=VARCHAR},
-      </if>
-      <if test="info != null">
-        #{info,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wsz.text.entity.Trole">
+  <update id="updateById" parameterType="com.wsz.text.entity.Trole">
     update t_role
     <set>
       <if test="rname != null">
@@ -62,13 +37,21 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.wsz.text.entity.Trole">
-    update t_role
-    set rname = #{rname,jdbcType=VARCHAR},
-      info = #{info,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
   <select id="selectAll" resultMap="BaseResultMap">
     select * from t_role order by id;
   </select>
+  <select id="selectCount" resultType="java.lang.Long">
+    select count(*) from t_role;
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select * from t_role order by id limit #{index},#{count};
+  </select>
+
+  <select id="selectAllPerms" resultType="com.wsz.text.entity.Tpermission">
+   select p.* from t_user_role ur
+inner join t_role_permission rp on ur.rid=rp.rid
+inner join t_permission p on rp.pid=p.id
+where ur.rid=#{id} order by  type,level,id;
+  </select>
+
 </mapper>

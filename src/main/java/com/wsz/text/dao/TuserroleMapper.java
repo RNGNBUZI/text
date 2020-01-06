@@ -1,17 +1,21 @@
 package com.wsz.text.dao;
 
+import com.wsz.text.entity.Trole;
 import com.wsz.text.entity.Tuserrole;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TuserroleMapper {
-    int deleteByPrimaryKey(Integer id);
-
+    int deleteById(Integer id);
+    //新增
     int insert(Tuserrole tuserrole);
 
-    int insertSelective(Tuserrole record);
+    int updateById(Tuserrole tuserrole);
 
-    Tuserrole selectByPrimaryKey(Integer id);
+    int deleteByUid(Integer uid);
 
-    int updateByPrimaryKeySelective(Tuserrole record);
+    int insertBatch(@Param("uid")Integer uid,@Param("rids") int[] rids);
 
-    int updateByPrimaryKey(Tuserrole record);
+    List<Trole> selectByUid(Integer uid);
 }

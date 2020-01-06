@@ -5,8 +5,17 @@ spring:
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
+  thymeleaf:
+    #设置thymeleaf页面的编码
+    mode: HTML5
+    encoding: UTF-8
+    #关闭 Thymeleaf 的缓存开发过程中无需重启
+    cache: false
+    #设置thymeleaf页面的后缀
+    servlet:
+      content-type: text/html
+    prefix: classpath:/static/
+
+
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
-
-
-

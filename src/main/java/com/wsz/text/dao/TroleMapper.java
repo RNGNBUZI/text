@@ -1,21 +1,18 @@
 package com.wsz.text.dao;
 
+import com.wsz.text.entity.Tpermission;
 import com.wsz.text.entity.Trole;
 
 import java.util.List;
 
-public interface TroleMapper {
-    int deleteByPrimaryKey(Integer id);
+public interface TroleMapper extends BaseDao<Trole>{
+    int deleteById(Integer id);
 
-    int insert(Trole record);
+    Trole selectById(Integer id);
 
-    int insertSelective(Trole record);
-
-   int selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(Trole record);
-
-    int updateByPrimaryKey(Trole record);
+    int updateById(Trole record);
 
     List<Trole> selectAll();
+
+    List<Tpermission> selectAllPerms(int id);
 }

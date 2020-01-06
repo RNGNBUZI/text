@@ -1,5 +1,7 @@
 package com.wsz.text.entity;
 
+import java.util.List;
+
 public class Trole {
     private Integer id;
 
@@ -7,6 +9,24 @@ public class Trole {
 
     private String info;
 
+    public List<Tuser> getUserInfos() {
+        return userInfos;
+    }
+
+    public void setUserInfos(List<Tuser> userInfos) {
+        this.userInfos = userInfos;
+    }
+
+    private List<Tuser> userInfos;
+    public List<Tpermission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Tpermission> permissions) {
+        this.permissions = permissions;
+    }
+
+    private List<Tpermission> permissions;
     public Integer getId() {
         return id;
     }
